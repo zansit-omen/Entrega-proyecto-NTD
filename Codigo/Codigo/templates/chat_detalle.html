@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat #{{ chat.id_chat }} | ProLink</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/styles.css') }}">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #e7edf1;
+            color: #1d2226;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .chat-shell {
+            width: min(1040px, 100%);
+            height: 100vh;
+            margin: 0 auto;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            background: #f5f7f8;
+            border-left: 1px solid #d4dde3;
+            border-right: 1px solid #d4dde3;
+        }
+
+        .chat-header {
+            min-height: 76px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            background: #ffffff;
+            border-bottom: 1px solid #d9e1e7;
+        }
+
+        .chat-title {
+            min-width: 0;
+        }
+
+        .chat-title h1 {
+            margin: 0 0 4px;
+            font-size: 20px;
+            line-height: 1.2;
+        }
+
+        .chat-title p {
+            margin: 0;
+            color: #667781;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            min-height: 40px;
+            border: 0;
+            border-radius: 8px;
+            padding: 0 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-back {
+            background: #0a66c2;
+        }
+
+        .btn-danger {
+            background: #b42318;
+        }
+
+        .messages {
+            padding: 22px 18px;
+            overflow-y: auto;
+            background:
+                linear-gradient(rgba(245, 247, 248, 0.86), rgba(245, 247, 248, 0.86)),
+                repeating-linear-gradient(45deg, #dce5ea 0 2px, transparent 2px 16px);
+        }
+
+        .message-row {
+            width: 100%;
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .message-row.own {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            width: fit-content;
+            max-width: min(680px, 82%);
+            padding: 10px 12px 8px;
+            background: #ffffff;
+            border: 1px solid #d9e1e7;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+        }
+
+        .message-row.own .message-bubble {
+            background: #d8f3dc;
+            border-color: #c2e8c7;
+        }
+
+        .message-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 5px;
+            color: #50606a;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .message-text {
+            margin: 0;
+            color: #1d2226;
+            font-size: 15px;
+            line-height: 1.42;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .message-actions {
+            margin-top: 7px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .delete-message {
+            border: 0;
+            background: transparent;
+            color: #b42318;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+
+        .empty-chat {
+            height: 100%;
+            display: grid;
+            place-items: center;
+            color: #667781;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .composer {
+            min-height: 78px;
+            padding: 12px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            background: #ffffff;
+            border-top: 1px solid #d9e1e7;
+        }
+
+        .composer textarea {
+            width: 100%;
+            min-height: 48px;
+            max-height: 128px;
+            resize: vertical;
+            border: 1px solid #cfd8df;
+            border-radius: 8px;
+            padding: 13px 14px;
+            color: #1d2226;
+            font: inherit;
+            line-height: 1.35;
+            outline: none;
+        }
+
+        .composer textarea:focus {
+            border-color: #0a66c2;
+            box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.14);
+        }
+
+        .send-button {
+            min-width: 112px;
+            background: #16833a;
+        }
+
+        @media (max-width: 640px) {
+            .chat-shell {
+                height: 100dvh;
+                border: 0;
+            }
+
+            .chat-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .header-actions .btn {
+                flex: 1;
+            }
+
+            .message-bubble {
+                max-width: 92%;
+            }
+
+            .composer {
+                grid-template-columns: 1fr;
+            }
+
+            .send-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="chat-shell">
+        <header class="chat-header">
+            <div class="chat-title">
+                <h1>Chat #{{ chat.id_chat }}</h1>
+                <p>{{ chat.candidato }} y {{ chat.delegado }}</p>
+            </div>
+
+            <div class="header-actions">
+                <a class="btn btn-back" href="/chats/{{ usuario }}">Volver</a>
+                <button class="btn btn-danger" type="button" onclick="eliminar_chat_completo('{{ chat.id_chat }}')">
+                    Eliminar chat
+                </button>
+            </div>
+        </header>
+
+        <section class="messages" id="messages">
+            {% if chat.mensajes %}
+                {% for mensaje in chat.mensajes %}
+                    <article class="message-row {% if mensaje.es_propio %}own{% endif %}" id="mensaje-{{ mensaje.id_mensaje }}">
+                        <div class="message-bubble">
+                            <div class="message-meta">
+                                <span>{{ mensaje.emisor }}</span>
+                                <time>{{ mensaje.timestamp }}</time>
+                            </div>
+
+                            <p class="message-text">{{ mensaje.contenido }}</p>
+
+                            {% if mensaje.es_propio %}
+                                <div class="message-actions">
+                                    <button class="delete-message" type="button" onclick="eliminar_mensaje('{{ mensaje.id_mensaje }}')">
+                                        Eliminar
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <div class="empty-chat">
+                    <p>No hay mensajes en esta conversacion.</p>
+                </div>
+            {% endif %}
+        </section>
+
+        <form class="composer" id="messageForm">
+            <textarea id="mensaje" name="mensaje" placeholder="Escribe un mensaje" required></textarea>
+            <button class="btn send-button" type="submit">Enviar</button>
+        </form>
+    </main>
+
+    <script>
+        const usuarioId = "{{ usuario }}";
+        const chatId = "{{ chat.id_chat }}";
+        const messages = document.getElementById("messages");
+        const messageForm = document.getElementById("messageForm");
+        const messageInput = document.getElementById("mensaje");
+
+        function scrollAlFinal() {
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        async function enviarMensaje(event) {
+            event.preventDefault();
+            const mensaje = messageInput.value.trim();
+            if (!mensaje) {
+                return;
+            }
+
+            const response = await fetch(`/chats/${usuarioId}/${chatId}/mensaje`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ mensaje })
+            });
+
+            if (!response.ok) {
+                const data = await response.json().catch(() => ({}));
+                alert(data.error || "No se pudo enviar el mensaje.");
+                return;
+            }
+
+            window.location.reload();
+        }
+
+        async function eliminar_mensaje(id_mensaje) {
+            if (!confirm("Deseas eliminar este mensaje?")) {
+                return;
+            }
+
+            const response = await fetch(`/chats/${usuarioId}/${chatId}/${id_mensaje}`, {
+                method: "DELETE"
+            });
+
+            if (!response.ok) {
+                const data = await response.json().catch(() => ({}));
+                alert(data.error || "No se pudo eliminar el mensaje.");
+                return;
+            }
+
+            const messageElement = document.getElementById(`mensaje-${id_mensaje}`);
+            if (messageElement) {
+                messageElement.remove();
+            }
+        }
+
+        async function eliminar_chat_completo(id_conversacion) {
+            if (!confirm("Deseas eliminar esta conversacion completa?")) {
+                return;
+            }
+
+            const response = await fetch(`/chats/${usuarioId}/${id_conversacion}`, {
+                method: "DELETE"
+            });
+
+            if (!response.ok) {
+                const data = await response.json().catch(() => ({}));
+                alert(data.error || "No se pudo eliminar el chat.");
+                return;
+            }
+
+            window.location.href = `/chats/${usuarioId}`;
+        }
+
+        messageForm.addEventListener("submit", enviarMensaje);
+        scrollAlFinal();
+    </script>
+</body>
+</html>

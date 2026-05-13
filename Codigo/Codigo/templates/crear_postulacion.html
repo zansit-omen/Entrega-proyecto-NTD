@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Postularse | tutrabajo</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='Css/styles.css') }}">
+
+    <style>
+
+        body{
+            background-color: #f3f2ef;
+        }
+
+        .info-box{
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .success-box{
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e3f2fd;
+            border-left: 4px solid var(--primary-blue);
+            border-radius: 4px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="main-header">
+
+        <div class="header-container">
+
+            <div class="logo-area">
+
+                <a href="/"
+                   style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
+
+                    <svg width="34"
+                         height="34"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+
+                        <rect width="24"
+                              height="24"
+                              rx="4"
+                              fill="#0077b5"/>
+
+                        <path d="M7 9H10V18H7V9Z"
+                              fill="white"/>
+
+                        <circle cx="8.5"
+                                cy="6.5"
+                                r="2"
+                                fill="white"/>
+
+                        <path d="M12 9H15V11.5C15.5 10 16.5 9 18 9C20 9 21 10.5 21 13V18H18V13.5C18 12.5 17.5 11.5 16.5 11.5C15.5 11.5 15 12.5 15 13.5V18H12V9Z"
+                              fill="white"/>
+
+                    </svg>
+
+                    <span class="brand-name">
+                        tutrabajo
+                    </span>
+
+                </a>
+
+            </div>
+
+            <a href="javascript:history.back()"
+               class="btn-login">
+
+               Volver atrás
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- CONTENIDO -->
+    <div class="profile-container">
+
+        <div class="profile-card">
+
+            <div class="profile-body"
+                 style="padding-top: 32px;">
+
+                <!-- TITULO -->
+                <div style="margin-bottom: 30px;">
+
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+
+                        <div style="
+                            width: 64px;
+                            height: 64px;
+                            background: var(--primary-blue);
+                            border-radius: 8px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 28px;
+                            color: white;
+                        ">
+                            📄
+                        </div>
+
+                        <div>
+
+                            <h2 style="
+                                color: var(--primary-blue);
+                                margin: 0;
+                            ">
+                                Nueva Postulación
+                            </h2>
+
+                            <p style="
+                                color: var(--text-muted);
+                                margin: 5px 0 0 0;
+                            ">
+                                Postúlate a esta oferta laboral
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <hr style="
+                    margin: 20px 0;
+                    border: 0;
+                    border-top: 1px solid var(--border-color);
+                ">
+
+
+                <!-- FORM -->
+                <form id="crearPostulacionForm">
+
+                    <!-- OFERTA -->
+                    <div class="form-group">
+
+                        <label>
+                            Oferta seleccionada
+                        </label>
+
+                        <input type="text"
+                               value="{{ oferta.titulo }}"
+                               disabled>
+
+                    </div>
+
+
+                    <!-- CANDIDATO -->
+                    <div class="form-group">
+
+                        <label>
+                            Candidato
+                        </label>
+
+                        <input type="text"
+                               value="{{ candidato.nombre }}"
+                               disabled>
+
+                    </div>
+
+
+                    <!-- PROFESION -->
+                    <div class="form-group">
+
+                        <label>
+                            Profesión
+                        </label>
+
+                        <input type="text"
+                               value="{{ candidato.profesion }}"
+                               disabled>
+
+                    </div>
+
+
+                    <!-- MENSAJE -->
+                    <div class="form-group">
+
+                        <label>
+                            Mensaje para el reclutador
+                        </label>
+
+                        <textarea
+                            name="mensaje"
+                            rows="6"
+                            placeholder="Escribe un mensaje breve para acompañar tu postulación..."
+                            style="
+                                width: 100%;
+                                padding: 10px;
+                                border: 1px solid var(--text-muted);
+                                border-radius: 4px;
+                                font-family: inherit;
+                                font-size: 14px;
+                                resize: vertical;
+                            "
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- INFO -->
+                    <div class="info-box">
+
+                        <p style="
+                            margin: 0;
+                            color: var(--text-muted);
+                            font-size: 12px;
+                        ">
+
+                            <strong>✓ Información:</strong>
+
+                            Tu postulación será enviada al delegado responsable
+                            de la oferta y podrá ser aceptada o rechazada.
+
+                        </p>
+
+                    </div>
+
+
+                    <!-- BOTONES -->
+                    <div style="
+                        display: flex;
+                        gap: 10px;
+                        margin-top: 25px;
+                    ">
+
+                        <button type="submit"
+                                class="btn-login"
+                                style="
+                                    border: none;
+                                    background: var(--primary-blue);
+                                    color: white;
+                                ">
+
+                            Postularme
+
+                        </button>
+
+
+                        <button type="button"
+                                onclick="window.history.back()"
+                                class="btn-detalle">
+
+                            Cancelar
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+
+                <!-- CONSEJO -->
+                <div class="success-box">
+
+                    <p style="
+                        margin: 0;
+                        color: #0277bd;
+                        font-size: 14px;
+                    ">
+
+                        <strong>💡 Consejo:</strong>
+
+                        Personaliza tu mensaje y asegúrate de que tu perfil
+                        esté actualizado antes de enviar tu postulación.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- SCRIPT -->
+    <script>
+
+        // Variables enviadas desde Flask
+        const candidatoId = {{ candidatoId }};
+        const ofertaId = {{ ofertaId }};
+
+
+
+        // SUBMIT
+        document.getElementById('crearPostulacionForm')
+            .addEventListener('submit', async (e) => {
+
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+
+            formData.append("candidatoId", candidatoId);
+            formData.append("ofertaId", ofertaId);
+
+            try {
+
+                const response = await fetch(window.location.pathname, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if(response.ok){
+
+                    alert('¡Postulación enviada exitosamente!');
+
+                    window.location.href =
+                        `/candidato/${candidatoId}/postulaciones`;
+
+                } else {
+
+                    const text = await response.text();
+
+                    alert('Error al enviar la postulación.');
+
+                    console.error(text);
+                }
+
+            } catch(error){
+
+                alert('Error de conexión.');
+
+                console.error(error);
+
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>

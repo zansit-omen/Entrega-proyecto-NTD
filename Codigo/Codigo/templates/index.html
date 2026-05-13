@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tutrabajo | Conecta con tu futuro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/styles.css') }}">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-area">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="24" height="24" rx="4" fill="#0077b5"/>
+                    <path d="M7 9H10V18H7V9Z" fill="white"/>
+                    <circle cx="8.5" cy="6.5" r="2" fill="white"/>
+                    <path d="M12 9H15V11.5C15.5 10 16.5 9 18 9C20 9 21 10.5 21 13V18H18V13.5C18 12.5 17.5 11.5 16.5 11.5C15.5 11.5 15 12.5 15 13.5V18H12V9Z" fill="white"/>
+                </svg>
+                <span class="brand-name">tutrabajo</span>
+            </div>
+            
+            <nav class="auth-nav">
+                {% if usuario_autenticado %}
+                    {% if usuario_tipo == "delegado" %}
+                        <a href="{{ url_for('delegado.buscar_delegado', id=usuario_id) }}" class="btn-dashboard">Ir al Dashboard</a>
+                    {% elif usuario_tipo == "candidato" %}
+                        <a href="{{ url_for('candidato.obtener_candidato', id=usuario_id) }}" class="btn-dashboard">Ir al Dashboard</a>
+                    {% endif %}
+                {% else %}
+                    <a href="/login" class="btn-login">Iniciar sesión</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <section class="hero-info">
+            <h1>Bienvenido a tu comunidad profesional</h1>
+            <p>Descubre oportunidades, conecta con expertos y construye tu carrera desde Bogotá para el mundo.</p>
+        </section>
+
+        <section class="jobs-board">
+            <div class="section-title">
+                <h2>Ofertas de trabajo destacadas</h2>
+                <span class="badge">Nuevas vacantes</span>
+            </div>
+            
+            <div class="grid-ofertas">
+                {% if ofertas and ofertas|length > 0 %}
+                    {% for oferta in ofertas %}
+                    <article class="oferta-card">
+                        <div class="oferta-header">
+                            <div class="empresa-placeholder">
+                                {{ oferta.titulo[0] | upper }}
+                            </div>
+                            <div class="header-text">
+                                <h3>{{ oferta.titulo }}</h3>
+                                <span class="profesion-tag">{{ oferta.profesionBuscar }}</span>
+                            </div>
+                        </div>
+                        <p class="oferta-desc">{{ oferta.descripcionOferta }}</p>
+                        <div class="oferta-footer">
+                            <a href="{{ url_for('oferta.buscar_oferta', idU=0, oferta_id=oferta.ofertaId) }}" class="btn-detalle">Ver detalles</a>
+                        </div>
+                    </article>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-ofertas">
+                        <p>No hay ofertas disponibles por el momento. ¡Vuelve pronto!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>tutrabajo</h3>
+                <p>La plataforma líder en conexión laboral.</p>
+            </div>
+            <div class="footer-contact">
+                <h4>Contacto</h4>
+                <ul>
+                    <li><strong>Email:</strong> contacto@tutrabajo.com</li>
+                    <li><strong>Teléfono:</strong> +57 (601) 555-0100</li>
+                    <li><strong>Ubicación:</strong> Bogotá, Colombia</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 tutrabajo - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+</body>
+</html>

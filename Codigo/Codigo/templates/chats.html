@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Chats</title>
+</head>
+<body>
+    <h1>Detalle de Chats</h1>
+    <ul>
+        {% for chat in chats %}
+        <li>{{ chat }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/">Inicio</a>
+</body>
+</html>

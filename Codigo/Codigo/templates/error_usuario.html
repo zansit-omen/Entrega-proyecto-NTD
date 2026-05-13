@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/styles.css') }}">
+    <title>Error | tutrabajo</title>
+</head>
+<body>
+    <div class="error-container">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <h1 style="margin-top: 20px;">Ups, algo salió mal</h1>
+        <p style="color: var(--text-muted); margin: 10px 0 30px;">{{ error }}</p>
+        <a href="/" class="btn-login">Volver al inicio</a>
+    </div>
+</body>
+</html>

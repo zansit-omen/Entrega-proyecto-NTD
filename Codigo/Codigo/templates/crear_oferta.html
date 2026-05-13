@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Nueva Oferta | tutrabajo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/styles.css') }}">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-area">
+                <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="24" height="24" rx="4" fill="#0077b5"/>
+                        <path d="M7 9H10V18H7V9Z" fill="white"/>
+                        <circle cx="8.5" cy="6.5" r="2" fill="white"/>
+                        <path d="M12 9H15V11.5C15.5 10 16.5 9 18 9C20 9 21 10.5 21 13V18H18V13.5C18 12.5 17.5 11.5 16.5 11.5C15.5 11.5 15 12.5 15 13.5V18H12V9Z" fill="white"/>
+                    </svg>
+                    <span class="brand-name">tutrabajo</span>
+                </a>
+            </div>
+            <a href="javascript:history.back()" class="btn-login">Volver atrás</a>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-body" style="padding-top: 32px;">
+                
+                <div style="margin-bottom: 30px;">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                        <div style="width: 64px; height: 64px; background: var(--primary-blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 28px; color: white;">
+                            ✚
+                        </div>
+                        <div>
+                            <h2 style="color: var(--primary-blue); margin: 0;">Nueva Oferta de Trabajo</h2>
+                            <p style="color: var(--text-muted); margin: 5px 0 0 0;">
+                                Crea una nueva oferta para tu empresa
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
+
+                <form id="crearOfertaForm">
+
+                    <div class="form-group">
+                        <label>Título de la Oferta <span style="color: red;">*</span></label>
+                        <input type="text" name="titulo" placeholder="Ej: Ingeniero de Software Senior" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Profesión Buscada <span style="color: red;">*</span></label>
+                        <input type="text" name="profesionBuscar" placeholder="Ej: Ingeniero de Software" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Descripción de la Oferta <span style="color: red;">*</span></label>
+                        <textarea
+                            name="descripcionOferta"
+                            rows="6"
+                            required
+                            placeholder="Describe los requisitos, responsabilidades, beneficios, etc."
+                            style="width: 100%; padding: 10px; border: 1px solid var(--text-muted); border-radius: 4px; font-family: inherit; font-size: 14px; resize: vertical;"
+                        ></textarea>
+                    </div>
+
+                    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                        <p style="margin: 0; color: var(--text-muted); font-size: 12px;">
+                            <strong>✓ Información:</strong> Esta oferta será asociada automáticamente a tu empresa y será visible para todos los candidatos.
+                        </p>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 25px;">
+                        <button type="submit" class="btn-login" style="border: none; background: var(--primary-blue); color: white;">
+                            Crear Oferta
+                        </button>
+                        <button type="button" onclick="window.history.back()" class="btn-detalle">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+
+                <div style="margin-top: 30px; padding: 15px; background-color: #e3f2fd; border-left: 4px solid var(--primary-blue); border-radius: 4px;">
+                    <p style="margin: 0; color: #0277bd; font-size: 14px;">
+                        <strong>💡 Consejo:</strong> Una buena descripción atrae más candidatos.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const usuarioId = "{{ usuarioId }}";
+
+        const form = document.getElementById('crearOfertaForm');
+        const inputs = form.querySelectorAll('[required]');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            let valido = true;
+
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    valido = false;
+                    input.style.borderColor = 'red';
+                } else {
+                    input.style.borderColor = '';
+                }
+            });
+
+            if (!valido) {
+                alert('Por favor completa todos los campos requeridos.');
+                return;
+            }
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(window.location.pathname, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('¡Oferta creada exitosamente!');
+                    window.location.href = '/delegado/oferta';
+                } else {
+                    const text = await response.text();
+                    console.error(text);
+                    alert('Error al crear la oferta');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Error de conexión');
+            }
+        });
+
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                if (input.value.trim()) {
+                    input.style.borderColor = '';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

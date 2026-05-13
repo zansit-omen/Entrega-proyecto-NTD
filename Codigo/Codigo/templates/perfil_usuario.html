@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mi Perfil | tutrabajo</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='Css/styles.css') }}"
+    />
+  </head>
+  <body>
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-area">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="24" height="24" rx="4" fill="#0077b5"/>
+                    <path d="M7 9H10V18H7V9Z" fill="white"/>
+                    <circle cx="8.5" cy="6.5" r="2" fill="white"/>
+                    <path d="M12 9H15V11.5C15.5 10 16.5 9 18 9C20 9 21 10.5 21 13V18H18V13.5C18 12.5 17.5 11.5 16.5 11.5C15.5 11.5 15 12.5 15 13.5V18H12V9Z" fill="white"/>
+                </svg>
+                <span class="brand-name">tutrabajo</span>
+            </div>
+        </div>
+    </header>    
+    <div class="profile-container">
+      <div class="profile-card">
+        <div class="profile-cover"></div>
+        <div class="profile-body">
+          <div class="profile-avatar-big">
+                {% if usuario.nombre %}
+                    {{ usuario.nombre[0] | upper }}
+                        {% elif usuario.Nombre %}
+                    {{ usuario.Nombre[0] | upper }}
+                        {% else %}
+                            U
+                        {% endif %}
+            </div>
+          <h2>Configuración de la cuenta</h2>
+          <p class="placeholder-text">
+            Gestiona tu información personal y seguridad.
+          </p>
+
+          <form id="updateUserForm" style="margin-top: 24px">
+            <div
+              class="grid-ofertas"
+              style="grid-template-columns: 1fr 1fr; gap: 16px"
+            >
+              <div class="form-group">
+                <label>Nombre Completo</label>
+                <input
+                  type="text"
+                  name="nombre"
+                  value="{{ usuario.nombre }}"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Correo Electrónico</label>
+                <input
+                  type="email"
+                  name="correo"
+                  value="{{ usuario.correo }}"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Teléfono</label>
+                <input
+                  type="text"
+                  name="numero"
+                  value="{{ usuario.numero }}"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Tipo de Usuario</label>
+                <select name="tipoUsuario">
+                  <option
+                    value="candidato"
+                    {% if usuario.tipoUsuario == "candidato" %}selected{% endif %}
+                  >
+                    Candidato
+                  </option>
+                  <option
+                    value="delegado"
+                    {% if usuario.tipoUsuario == "delegado" %}selected{% endif %}
+                  >
+                    Empresa (Delegado)
+                  </option>
+                </select>
+              </div>
+            </div>
+            <button
+              type="submit"
+              class="btn-login"
+              style="margin-top: 20px; width: auto"
+            >
+              Guardar Cambios
+            </button>
+          </form>
+            <div style="display: flex; gap: 10px; margin-top: 15px">
+              <button onclick="borrarCuenta()" class="btn-danger">
+                Eliminar cuenta permanentemente
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Manejador para actualizar contraseña (PUT)
+      document
+        .getElementById("passwordForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+
+          // Usamos la ruta que definiste en tu Blueprint
+          const response = await fetch(
+            `/actualizar-contrasena/{{ usuario.Id }}`,
+            {
+              method: "PUT",
+              body: formData,
+            },
+          );
+
+          if (response.ok) {
+            alert(
+              "Contraseña actualizada. Por seguridad, inicia sesión nuevamente.",
+            );
+            window.location.href = "/login";
+          } else {
+            alert("No se pudo actualizar la contraseña.");
+          }
+        });
+
+      // Manejador para actualizar usuario (PUT)
+      document
+        .getElementById("updateUserForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+
+          const response = await fetch(`/actualizar-usuario/{{ usuario.Id }}`, {
+            method: "PUT",
+            body: formData,
+          });
+
+          if (response.ok) {
+            alert("Perfil actualizado con éxito");
+            window.location.reload();
+          } else {
+            alert("Error al actualizar el perfil");
+          }
+        });
+
+      // Manejador para borrar cuenta (DELETE)
+      async function borrarCuenta() {
+        if (confirm("¿Estás seguro? Esta acción no se puede deshacer.")) {
+          const response = await fetch(`/borrar-usuario/{{ usuario.Id }}`, {
+            method: "DELETE",
+          });
+          if (response.ok) {
+            window.location.href = "/login";
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

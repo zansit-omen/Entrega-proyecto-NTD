@@ -1,0 +1,212 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Delegado</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background-color: #f3f2ef;
+            color: #1d2226;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: white;
+            border-bottom: 1px solid #ddd;
+            padding: 12px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #0a66c2;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #0a66c2;
+        }
+
+        /* Main container */
+        .container {
+            width: 900px;
+            margin: 40px auto;
+        }
+
+        /* Profile card */
+        .profile-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+
+        .profile-content {
+            padding: 30px;
+            position: relative;
+        }
+
+
+        .profile-info {
+            margin-top: 80px;
+        }
+
+        .profile-info h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .company {
+            color: #666;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: #e7f3ff;
+            color: #0a66c2;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* Sections */
+        .section {
+            background-color: white;
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .section h2 {
+            margin-bottom: 15px;
+            color: #0a66c2;
+        }
+
+        .section p {
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #0a66c2;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #004182;
+        }
+
+        @media (max-width: 950px) {
+            .container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            tutrabajo
+        </div>
+
+        <div class="nav-links">
+            <a href="/login">Cerrar sesion</a>
+            <a href="/chats/{{ usuarioId }}">Mensajes</a>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="container">
+
+        <!-- Profile card -->
+        <div class="profile-card">
+            <div class="banner"></div>
+
+            <div class="profile-content">
+
+                <div class="profile-info">
+                    <h1>{{ delegado.nombre }}</h1>
+
+                    <div class="company">
+                        Delegado de {{ delegado.razonSocial }}
+                    </div>
+
+                    <span class="badge">
+                        Reclutador Verificado
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- About section -->
+        <div class="section">
+            <h2>Acerca de</h2>
+
+            <p>
+                Responsable del proceso de reclutamiento y búsqueda de talento.
+                Gestiona ofertas laborales, candidatos y procesos de selección.
+            </p>
+        </div>
+
+        <!-- Actions -->
+        <div class="section">
+            <h2>Acciones rápidas</h2>
+
+            <a href="/usuario/{{ usuarioId }}" class="btn" style="background-color: #0a66c2;">
+                👤 Mi Perfil
+            </a>
+            <a href="/delegado/oferta" class="btn">
+                Ver mis ofertas 
+            </a>
+            <a href="/delegado/oferta/crear" class="btn" style="background-color: #28a745;">
+                ➕ Crear Nueva Oferta
+            </a>
+            <a href="/" class="btn" style="background-color: #999;">
+                Volver al inicio
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>
+```

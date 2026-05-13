@@ -1,0 +1,68 @@
+                                                                         <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ofertas de Trabajo | tutrabajo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/styles.css') }}">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-area">
+                <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#0077b5"/><path d="M7 9H10V18H7V9Z" fill="white"/><circle cx="8.5" cy="6.5" r="2" fill="white"/><path d="M12 9H15V11.5C15.5 10 16.5 9 18 9C20 9 21 10.5 21 13V18H18V13.5C18 12.5 17.5 11.5 16.5 11.5C15.5 11.5 15 12.5 15 13.5V18H12V9Z" fill="white"/></svg>
+                    <span class="brand-name">tutrabajo</span>
+                </a>
+            </div>
+        </div>
+    </header>     
+
+    <main class="content-wrapper">
+        <div class="section-title" style="justify-content: space-between;">
+            <h2>Tablero de Ofertas</h2>
+            {% if tipoUsuario == "delegado" %}                 
+            <button onclick="window.location.href='/delegado/oferta/crear'" class="btn-login" style="border: none; background: var(--primary-blue); color: white;">
+                + Nueva Oferta
+            </button>
+            {% endif %}
+        </div>
+
+        <div class="grid-ofertas">
+            {% if ofertas %}
+                {% for oferta in ofertas %}
+                <article class="oferta-card">
+                    <div class="oferta-header">
+                        <div class="empresa-placeholder">{{ oferta.titulo[0] | upper }}</div>
+                        <div class="header-text">
+                            <h3>{{ oferta.titulo }}</h3>
+                            <span class="profesion-tag">{{ oferta.profesionBuscar }}</span>
+                        </div>
+                    </div>
+                    <p class="oferta-desc">{{ oferta.descripcionOferta }}</p>
+                    <div class="oferta-footer" style="display: flex; justify-content: space-between; align-items: center;">
+                        {% if tipoUsuario == "candidato" %}
+                            <a href="/candidato/ofertas/{{ oferta.ofertaId }}" class="btn-detalle">
+                                Ver Detalles
+                            </a>
+                        {% else %}
+                            <a href="/delegado/oferta/{{oferta.ofertaId}}">
+                                Ver Detalles
+                            </a>
+                            <a href="/delegado/{{ usuarioId }}/oferta/{{ oferta.ofertaId }}/postulacion"
+                            class="btn"
+                            style="background-color: #28a745;">
+
+                                Ver postulaciones
+
+                            </a>
+                        {% endif %}
+                    </div>
+                </article>
+                {% endfor %}
+            {% else %}
+                <div class="no-ofertas"><p>No hay ofertas disponibles en este momento.</p></div>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Error - Ofertas | tutrabajo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/styles.css') }}">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-area">
+                <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
+                    <span class="brand-name">tutrabajo</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-body" style="text-align: center; padding: 40px;">
+                <div style="font-size: 48px; margin-bottom: 20px;">⚠️</div>
+                <h2 style="color: var(--primary-blue); margin-bottom: 10px;">Error en Oferta</h2>
+                <p style="color: var(--text-muted); font-size: 16px; margin-bottom: 30px;">
+                    {{ error }}
+                </p>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button onclick="window.history.back()" class="btn-login" style="border: none; background: var(--primary-blue); color: white;">
+                        Volver Atrás
+                    </button>
+                    <button onclick="window.location.href='/'" class="btn-detalle">
+                        Ir al Inicio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

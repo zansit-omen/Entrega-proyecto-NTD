@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Oferta | tutrabajo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/styles.css') }}">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-area"><a href="/" style="text-decoration: none;"><span class="brand-name">tutrabajo</span></a></div>
+            <a href="javascript:history.back()" class="btn-login">Volver atrás</a>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-body" style="padding-top: 32px;">
+                <div class="oferta-header">
+                    <div class="empresa-placeholder" style="width: 64px; height: 64px; font-size: 28px;">
+                        {{ oferta.titulo[0] | upper if oferta.titulo else 'O' }}
+                    </div>
+                    <div>
+                        <h2 style="color: var(--primary-blue);">{{ oferta.titulo }}</h2>
+                        <span class="profesion-tag">{{ oferta.profesionBuscar }}</span>
+                        <span style="font-size: 13px; margin-left: 10px; color: {% if oferta.estadoOferta == 1 %}green{% else %}red{% endif %};">
+                            {% if oferta.estadoOferta == 1 %}● Activa{% else %}● Cerrada{% endif %}
+                        </span>
+                        {% if puede_editar %}
+                            <span style="font-size: 12px; margin-left: 10px; background: #4CAF50; color: white; padding: 4px 8px; border-radius: 3px;">✓ Editable</span>
+                        {% else %}
+                            <span style="font-size: 12px; margin-left: 10px; background: #999; color: white; padding: 4px 8px; border-radius: 3px;">🔒 Solo lectura</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
+
+                {% if tipoUsuario == "delegado" %}
+                <form id="editarOfertaForm">
+                    <div class="form-group">
+                        <label>Título de la Oferta</label>
+                        <input type="text" name="titulo" value="{{ oferta.titulo }}" {% if not puede_editar %}readonly{% else %}required{% endif %}>
+                    </div>
+                    <div class="form-group">
+                        <label>Profesión Buscada</label>
+                        <input type="text" name="profesionBuscar" value="{{ oferta.profesionBuscar }}" {% if not puede_editar %}readonly{% else %}required{% endif %}>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción de la Oferta</label>
+                        <textarea name="descripcionOferta" rows="5" {% if not puede_editar %}readonly{% else %}required{% endif %} style="width: 100%; padding: 10px; border: 1px solid var(--text-muted); border-radius: 4px;">{{ oferta.descripcionOferta }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Estado</label>
+                        <select name="estadoOferta" {% if not puede_editar %}disabled{% endif %}>
+                            <option value="1" {% if oferta.estadoOferta == 1 %}selected{% endif %}>Activa (Abierta)</option>
+                            <option value="0" {% if oferta.estadoOferta == 0 %}selected{% endif %}>Inactiva (Cerrada)</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        {% if puede_editar %}
+                            <button type="submit" class="btn-login" style="border: none; background: var(--primary-blue); color: white;">Actualizar Oferta</button>
+                            <button type="button" onclick="eliminarOferta()" class="btn-danger">Eliminar Oferta</button>
+                        {% elif tipoUsuario == "candidato" %}
+                            <button type="button" onclick="postularOferta()" class="btn-login" style="border: none; background: #4CAF50; color: white;">
+                                ✓ Postular para esta Oferta
+                            </button>
+                            <button type="button" onclick="window.history.back()" class="btn-detalle">Volver Atrás</button>
+                        {% else %}
+                            <button type="button" onclick="window.history.back()" class="btn-detalle">Volver Atrás</button>
+                        {% endif %}
+                    </div>
+                </form>
+                {% else %}
+                <!-- Vista de lectura para candidatos -->
+                <div style="background-color: #f9f9f9; padding: 20px; border-radius: 4px;">
+                    <div class="form-group">
+                        <label style="font-weight: bold; color: var(--primary-blue);">Título de la Oferta</label>
+                        <p style="margin: 8px 0; padding: 10px; background: white; border-radius: 4px; border-left: 3px solid var(--primary-blue);">{{ oferta.titulo }}</p>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight: bold; color: var(--primary-blue);">Profesión Buscada</label>
+                        <p style="margin: 8px 0; padding: 10px; background: white; border-radius: 4px; border-left: 3px solid var(--primary-blue);">{{ oferta.profesionBuscar }}</p>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight: bold; color: var(--primary-blue);">Descripción de la Oferta</label>
+                        <p style="margin: 8px 0; padding: 10px; background: white; border-radius: 4px; border-left: 3px solid var(--primary-blue); white-space: pre-wrap;">{{ oferta.descripcionOferta }}</p>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" onclick="postularOferta()" class="btn-login" style="border: none; background: #4CAF50; color: white; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                        ✓ Postular para esta Oferta
+                    </button>
+                    <button type="button" onclick="window.history.back()" class="btn-detalle" style="padding: 10px 20px;">Volver Atrás</button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lógica para postular a una oferta (candidatos)
+        async function postularOferta() {
+        if (!confirm('¿Deseas postularte para esta oferta?')) return;
+
+        try {
+            const pathParts = window.location.pathname.split('/');
+
+            // Ruta esperada:
+            // /candidato/ofertas/<oferta_id>
+            const ofertaId = pathParts[3];
+
+            if (!ofertaId) {
+                console.error("No se pudo obtener el ID de la oferta:", pathParts);
+                alert("Error interno: ID de oferta inválido");
+                return;
+            }
+
+            const response = await fetch(`/candidato/ofertas/${ofertaId}/postular`, {
+                method: 'POST'
+            });
+
+            const text = await response.text();
+
+            if (response.ok) {
+                alert('¡Postulación enviada exitosamente!');
+                window.location.href = `/candidato/ofertas`;
+            } else {
+                console.error("ERROR POSTULACIÓN:", text);
+                alert('Error al postular: revisa consola (F12)');
+            }
+
+        } catch (error) {
+            console.error("Error de red:", error);
+            alert('Error de conexión al postular');
+        }
+    }
+
+        {% if puede_editar %}
+        // Lógica para el PUT (solo si puede editar)
+        document.getElementById('editarOfertaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            // Usamos window.location.pathname para enviar el PUT a la misma URL actual
+            const response = await fetch(window.location.pathname, {
+                method: 'PUT',
+                body: formData
+            });
+
+            if (response.ok) {
+                alert('Oferta actualizada exitosamente.');
+                window.location.reload();
+            } else {
+                const text = await response.text();
+                alert('Error al actualizar la oferta: ' + text);
+            }
+        });
+
+        // Lógica para el DELETE
+        async function eliminarOferta() {
+            if (confirm('¿Estás seguro de eliminar esta oferta? Esta acción no se puede deshacer.')) {
+                const response = await fetch(window.location.pathname, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    alert('Oferta eliminada.');
+                    // Redirigimos quitando el ID de la oferta de la URL actual
+                    const parts = window.location.pathname.split('/');
+                    parts.pop(); // Quita el ID de la oferta
+                    window.location.href = parts.join('/'); 
+                } else {
+                    const text = await response.text();
+                    alert('No se pudo eliminar la oferta: ' + text);
+                }
+            }
+        }
+        {% else %}
+        // Si no puede editar, desactivar el formulario
+        document.getElementById('editarOfertaForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('No tienes permisos para editar esta oferta.');
+        });
+        {% endif %}
+    </script>
+</body>
+</html>

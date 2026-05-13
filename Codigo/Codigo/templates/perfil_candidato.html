@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil Candidato</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/styles.css') }}">
+
+</head>
+
+<body>
+
+    <header class="main-header">
+
+        <div class="header-container">
+
+            <div class="logo-area">
+
+                <a href="/"
+                   style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
+
+                    <svg width="34"
+                         height="34"
+                         viewBox="0 0 24 24"
+                         fill="none">
+
+                        <rect width="24"
+                              height="24"
+                              rx="4"
+                              fill="#0077b5"/>
+
+                        <path d="M7 9H10V18H7V9Z"
+                              fill="white"/>
+
+                        <circle cx="8.5"
+                                cy="6.5"
+                                r="2"
+                                fill="white"/>
+
+                        <path d="M12 9H15V11.5C15.5 10 16.5 9 18 9C20 9 21 10.5 21 13V18H18V13.5C18 12.5 17.5 11.5 16.5 11.5C15.5 11.5 15 12.5 15 13.5V18H12V9Z"
+                              fill="white"/>
+
+                    </svg>
+
+                    <span class="brand-name">
+                        tutrabajo
+                    </span>
+
+                </a>
+
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+
+                <!-- VER OFERTAS -->
+                <a href="/candidato/ofertas"
+                   class="btn-login"
+                   style="background: var(--primary-blue); color: white; text-decoration: none;">
+
+                    Ver Ofertas
+
+                </a>
+
+
+                <!-- MI PERFIL -->
+                <a href="/usuario/{{ idUsuario }}"
+                   class="btn-login"
+                   style="background: var(--primary-blue); color: white; text-decoration: none;">
+
+                    Mi Perfil
+
+                </a>
+
+
+                <!-- MIS POSTULACIONES -->
+                <a href="/candidato/{{ idUsuario }}/postulacion"
+                   class="btn-login"
+                   style="background: var(--primary-blue); color: white; text-decoration: none;">
+
+                    Mis postulaciones
+
+                </a>
+
+                <a href="/chats/{{ idUsuario }}"
+                class="btn-login"
+                style="background: var(--primary-blue); color: white; text-decoration: none;">
+
+                    Mis chats
+
+                </a>
+
+
+
+                <!-- CERRAR SESION -->
+                <a href="/login"
+                   class="btn-login">
+
+                    Cerrar sesión
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- CONTENIDO -->
+    <div class="profile-container">
+
+        <div class="profile-card">
+
+            <div class="profile-body">
+
+                <!-- HEADER PERFIL -->
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+
+                    <div style="
+                        width: 80px;
+                        height: 80px;
+                        background: var(--primary-blue);
+                        border-radius: 8px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 32px;
+                        color: white;
+                    ">
+
+                        👤
+
+                    </div>
+
+                    <div>
+
+                        <h2 style="color: var(--primary-blue); margin: 0;">
+
+                            {{ candidato.nombre if candidato else 'Candidato' }}
+
+                        </h2>
+
+                        <p style="color: var(--text-muted); margin: 5px 0 0 0;">
+
+                            Profesión:
+                            {{ candidato.profesion if candidato else 'N/A' }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <hr style="
+                    margin: 20px 0;
+                    border: 0;
+                    border-top: 1px solid var(--border-color);
+                ">
+
+
+                <!-- INFO -->
+                <div style="
+                    background-color: #f9f9f9;
+                    padding: 20px;
+                    border-radius: 4px;
+                ">
+
+                    <h3 style="color: var(--primary-blue); margin-top: 0;">
+
+                        Información del Perfil
+
+                    </h3>
+
+
+                    <div style="
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 15px;
+                    ">
+
+                        <!-- NOMBRE -->
+                        <div>
+
+                            <label style="
+                                font-weight: bold;
+                                color: var(--text-muted);
+                            ">
+
+                                Nombre
+
+                            </label>
+
+                            <p style="
+                                margin: 5px 0;
+                                padding: 10px;
+                                background: white;
+                                border-radius: 4px;
+                            ">
+
+                                {{ candidato.nombre if candidato else 'N/A' }}
+
+                            </p>
+
+                        </div>
+
+
+                        <!-- PROFESION -->
+                        <div>
+
+                            <label style="
+                                font-weight: bold;
+                                color: var(--text-muted);
+                            ">
+
+                                Profesión
+
+                            </label>
+
+                            <p style="
+                                margin: 5px 0;
+                                padding: 10px;
+                                background: white;
+                                border-radius: 4px;
+                            ">
+
+                                {{ candidato.profesion if candidato else 'N/A' }}
+
+                            </p>
+
+                        </div>
+
+
+                        <!-- CORREO -->
+                        <div>
+
+                            <label style="
+                                font-weight: bold;
+                                color: var(--text-muted);
+                            ">
+
+                                Correo
+
+                            </label>
+
+                            <p style="
+                                margin: 5px 0;
+                                padding: 10px;
+                                background: white;
+                                border-radius: 4px;
+                            ">
+
+                                {{ candidato.correo if candidato else 'N/A' }}
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MENSAJE -->
+                <div style="
+                    margin-top: 30px;
+                    padding: 15px;
+                    background-color: #e3f2fd;
+                    border-left: 4px solid var(--primary-blue);
+                    border-radius: 4px;
+                ">
+
+                    <p style="
+                        margin: 0;
+                        color: #0277bd;
+                        font-size: 14px;
+                    ">
+
+                        <strong>
+                            💼 Siguiente paso:
+                        </strong>
+
+                        Navega a
+
+                        <a href="/candidato/ofertas"
+                           style="
+                                color: #0277bd;
+                                text-decoration: underline;
+                                font-weight: bold;
+                           ">
+
+                            Ver Ofertas
+
+                        </a>
+
+                        para encontrar las mejores oportunidades laborales.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
