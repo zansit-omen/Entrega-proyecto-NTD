@@ -183,6 +183,38 @@
 
         </div>
 
+        {% if disponibles and tipo_disponible %}
+        <div class="chat-card" style="margin-bottom: 32px;">
+            <h2>Iniciar nuevo chat</h2>
+            <form method="post" action="/chats/{{ idUsuario }}">
+                {% if tipo_disponible == 'delegado' %}
+                    <label for="id_delegado">Selecciona un delegado:</label>
+                    <select name="id_delegado" id="id_delegado" required>
+                        <option value="">-- Selecciona --</option>
+                        {% for d in disponibles %}
+                        <option value="{{ d.delegadoId }}">{{ d.nombre }} ({{ d.correo }})</option>
+                        {% endfor %}
+                    </select>
+                    <input type="hidden" name="id_candidato" value="{{ identidad.candidatoId }}">
+                {% elif tipo_disponible == 'candidato' %}
+                    <label for="id_candidato">Selecciona un candidato:</label>
+                    <select name="id_candidato" id="id_candidato" required>
+                        <option value="">-- Selecciona --</option>
+                        {% for c in disponibles %}
+                        <option value="{{ c.candidatoId }}">{{ c.nombre }} ({{ c.correo }})</option>
+                        {% endfor %}
+                    </select>
+                    <input type="hidden" name="id_delegado" value="{{ identidad.delegadoId }}">
+                {% endif %}
+                <br><br>
+                <label for="mensaje">Mensaje inicial:</label>
+                <textarea name="mensaje" id="mensaje" required style="width:100%;min-height:60px;"></textarea>
+                <br>
+                <button type="submit" class="btn-chat" style="margin-top:10px;">Iniciar chat</button>
+            </form>
+        </div>
+        {% endif %}
+
 
         {% if chats %}
 

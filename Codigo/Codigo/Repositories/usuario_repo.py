@@ -5,6 +5,45 @@ from Cross.jwt_middleware import JWTMiddleware
 
 
 class usuarios_repo:
+    @staticmethod
+    def listar_delegados_disponibles_para_candidato(id_candidato):
+        """Devuelve una lista de delegados con los que el candidato NO tiene chat."""
+        conn = usuarios_repo.get_db_connection()
+        conn.row_factory = sqlite3.Row
+        # Obtener todos los delegados
+        delegados = conn.execute("""
+            SELECT d.delegadoId, u.Id, u.nombre, u.correo
+            FROM delegado d
+            JOIN usuario u ON d.Id = u.Id
+        """).fetchall()
+        # Obtener delegados con los que ya tiene chat
+        from Repositories.chat_repositorio import chat_repositorio
+        chats = chat_repositorio.obtener_chats_usuario(id_candidato=id_candidato)
+        delegados_con_chat = {int(chat.get('id_delegado')) for chat in chats}
+        # Filtrar delegados
+        disponibles = [dict(row) for row in delegados if int(row['delegadoId']) not in delegados_con_chat]
+        conn.close()
+        return disponibles
+
+    @staticmethod
+    def listar_candidatos_disponibles_para_delegado(id_delegado):
+        """Devuelve una lista de candidatos con los que el delegado NO tiene chat."""
+        conn = usuarios_repo.get_db_connection()
+        conn.row_factory = sqlite3.Row
+        # Obtener todos los candidatos
+        candidatos = conn.execute("""
+            SELECT c.candidatoId, u.Id, u.nombre, u.correo, c.profesion
+            FROM candidato c
+            JOIN usuario u ON c.Id = u.Id
+        """).fetchall()
+        # Obtener candidatos con los que ya tiene chat
+        from Repositories.chat_repositorio import chat_repositorio
+        chats = chat_repositorio.obtener_chats_usuario(id_delegado=id_delegado)
+        candidatos_con_chat = {int(chat.get('id_candidato')) for chat in chats}
+        # Filtrar candidatos
+        disponibles = [dict(row) for row in candidatos if int(row['candidatoId']) not in candidatos_con_chat]
+        conn.close()
+        return disponibles
 
     @staticmethod
     def get_db_connection():
